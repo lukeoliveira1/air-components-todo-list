@@ -1,7 +1,23 @@
+"use client";
+
+import { useState } from "react";
 import Box from "@/components/Box";
 import NewTask from "@/components/NewTask";
 
 export default function Home() {
+  const [tasks, setTasks] = useState<TaskProps[]>([]);
+
+  const handleClick = () => {
+    setTasks((prevTasks) => [
+      ...prevTasks,
+      {
+        text: "Nova tarefa",
+        description:
+          "Este é uma tarefa de exemplo. Você pode marcar como concluída, editar ou excluir.",
+      },
+    ]);
+  };
+
   return (
     <>
       <div className="flex flex-wrap justify-center items-center py-3 flex-col">
@@ -9,17 +25,12 @@ export default function Home() {
           <h1 className="text-3xl font-bold">Lista de Tarefas</h1>
         </div>
         <div className="flex gap-4">
-          <NewTask />
+          <NewTask handleClick={handleClick} />
         </div>
-        <div className="flex gap-8 py-4">
-          <Box
-            text="Exemplo de tarefa"
-            description="Este é uma tarefa de exemplo. Você pode marcar como concluída, editar ou excluir."
-          />
-          <Box
-            text="Exemplo de tarefa"
-            description="Este é uma tarefa de exemplo. Você pode marcar como concluída, editar ou excluir."
-          />
+        <div id="boxes" className="flex gap-8 py-4">
+          {tasks.map((task, index) => (
+            <Box key={index} text={task.text} description={task.description} />
+          ))}
         </div>
       </div>
     </>

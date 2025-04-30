@@ -1,12 +1,7 @@
 import { SquarePen } from "lucide-react";
 import { Trash2 } from "lucide-react";
 
-interface BoxProps {
-  text: string;
-  description: string;
-}
-
-export default function Box({ text, description }: BoxProps) {
+export default function Box({ text, description }: TaskProps) {
   return (
     <>
       <div className="w-[485px] h-[150px] border-gray-300 border-1 rounded-lg p-4 space-y-2">
