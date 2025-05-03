@@ -1,21 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import Box from "@/components/Box";
-import NewTask from "@/components/NewTask";
+import TaskForm from "@/components/TaskForm";
+import TaskCard from "@/components/TaskCard";
 
 export default function Home() {
   const [tasks, setTasks] = useState<TaskProps[]>([]);
 
-  const handleClick = () => {
-    setTasks((prevTasks) => [
-      ...prevTasks,
-      {
-        text: "Nova tarefa",
-        description:
-          "Este é uma tarefa de exemplo. Você pode marcar como concluída, editar ou excluir.",
-      },
-    ]);
+  const addTask = (text: string, description: string) => {
+    setTasks((prevTasks) => [...prevTasks, { text, description }]);
+  };
+
+  const editTask = (index: number, newText: string, newDescription: string) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task, i) =>
+        i === index
+          ? { ...task, text: newText, description: newDescription }
+          : task
+      )
+    );
+  };
+
+  const deleteTask = (index: number) => {
+    setTasks((prevTasks) => prevTasks.filter((_, i) => i !== index));
   };
 
   return (
@@ -25,11 +32,20 @@ export default function Home() {
           <h1 className="text-3xl font-bold">Lista de Tarefas</h1>
         </div>
         <div className="flex gap-4">
-          <NewTask handleClick={handleClick} />
+          <TaskForm addTask={addTask} />
         </div>
-        <div id="boxes" className="flex gap-8 py-4">
+        <div id="boxes" className="grid grid-cols-2 gap-8 py-4">
           {tasks.map((task, index) => (
-            <Box key={index} text={task.text} description={task.description} />
+            <TaskCard
+              key={index}
+              index={index}
+              text={task.text}
+              description={task.description}
+              handleEdit={(newText, newDescription) =>
+                editTask(index, newText, newDescription)
+              }
+              handleDelete={deleteTask}
+            />
           ))}
         </div>
       </div>
