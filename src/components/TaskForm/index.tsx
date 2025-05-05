@@ -1,22 +1,25 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { useState } from "react";
+
+import { SubmitHandler, useForm } from "react-hook-form";
 
 interface NewTaskProps {
   addTask: (text: string, description: string) => void;
 }
 
-export default function TaskForm({ addTask }: NewTaskProps) {
-  const [text, setText] = useState("");
-  const [description, setDescription] = useState("");
+interface FormData {
+  text: string;
+  description: string;
+}
 
-  const onSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (text.trim()) {
-      addTask(text, description);
-      setText("");
-      setDescription("");
+export default function TaskForm({ addTask }: NewTaskProps) {
+  const { register, handleSubmit, reset } = useForm<FormData>();
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    if (data.text.trim()) {
+      addTask(data.text, data.description);
+      reset();
     }
   };
 
@@ -25,19 +28,17 @@ export default function TaskForm({ addTask }: NewTaskProps) {
       <div className="w-[1000px] h-[300px] border-gray-300 border-1 rounded-lg p-4 space-y-4">
         <h2 className="text-xl font-bold text-gray-900">Adicionar tarefa</h2>
         <div className="space-y-3">
-          <form action="#" className="space-y-5" onSubmit={onSubmit}>
+          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <input
               type="text"
               className="w-full px-3 py-2 border-gray-300 rounded-md outline-none ring-1 ring-gray-300"
               placeholder="Título da tarefa"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
+              {...register("text", { required: true })}
             />
             <textarea
               className="w-full h-[100px] px-3 py-2 border-gray-300 rounded-md outline-none ring-1 ring-gray-300"
               placeholder="Descrição (opcional)"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              {...register("description")}
             />
             <button
               type="submit"
