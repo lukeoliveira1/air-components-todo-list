@@ -1,5 +1,3 @@
-"use client";
-
 import { Plus } from "lucide-react";
 
 import { SubmitHandler, useForm } from "react-hook-form";
