@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskForm from "@/components/TaskForm";
 import TaskCard from "@/components/TaskCard";
 
 export default function Home() {
   const [tasks, setTasks] = useState<TaskProps[]>([]);
+
+  useEffect(() => {
+    const tasksLocalStorage = localStorage.getItem("tasks");
+    if (tasksLocalStorage) {
+      setTasks(JSON.parse(tasksLocalStorage));
+    }
+  }, []);
 
   const addTask = (text: string, description: string) => {
     setTasks((prevTasks) => [...prevTasks, { text, description }]);
@@ -24,6 +31,10 @@ export default function Home() {
   const deleteTask = (index: number) => {
     setTasks((prevTasks) => prevTasks.filter((_, i) => i !== index));
   };
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   return (
     <>
